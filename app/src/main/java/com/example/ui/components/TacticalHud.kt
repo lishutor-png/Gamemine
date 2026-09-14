@@ -71,6 +71,7 @@ fun TacticalHud(
     onToggleThemeClick: () -> Unit,
     onLeaderboardClick: () -> Unit,
     onStatsClick: () -> Unit,
+    onBombsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val remainingMines = (totalMines - flagsPlaced).coerceAtLeast(-99)
@@ -249,25 +250,39 @@ fun TacticalHud(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Bomb Counter Display
+                // Bomb Counter Display (Tap to configure custom bomb count)
                 Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable(onClick = onBombsClick)
+                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                        .testTag("hud_bomb_counter_button"),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.Default.Flag,
-                        contentDescription = "Bombs Remaining",
+                        contentDescription = "Bombs Remaining - Tap to change",
                         tint = CyberRed,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Column {
-                        Text(
-                            text = "ORDNANCE",
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            letterSpacing = 0.5.sp
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "ORDNANCE",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                letterSpacing = 0.5.sp
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "• ATUR",
+                                fontSize = 8.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = CyberRed.copy(alpha = 0.8f)
+                            )
+                        }
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(4.dp))

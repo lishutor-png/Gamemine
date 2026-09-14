@@ -48,8 +48,10 @@ import com.example.ui.theme.HazardAmber
 fun ControlBar(
     controlMode: ControlMode,
     currentDifficulty: DifficultyLevel,
+    totalMines: Int = 10,
     onModeChange: (ControlMode) -> Unit,
     onDifficultySelect: (DifficultyLevel) -> Unit,
+    onQuickBombClick: () -> Unit = {},
     onCustomConfigClick: () -> Unit,
     onZoomIn: () -> Unit,
     onZoomOut: () -> Unit,
@@ -235,6 +237,45 @@ fun ControlBar(
                     isSelected = currentDifficulty == DifficultyLevel.HARD,
                     onClick = { onDifficultySelect(DifficultyLevel.HARD) }
                 )
+
+                // Quick Bomb Adjuster Button
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(CyberRed.copy(alpha = 0.15f))
+                        .border(
+                            1.dp,
+                            CyberRed.copy(alpha = 0.5f),
+                            RoundedCornerShape(8.dp)
+                        )
+                        .clickable { onQuickBombClick() }
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                        .testTag("quick_bomb_bar_button"),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Flag,
+                            contentDescription = "Atur Jumlah Bom",
+                            tint = CyberRed,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Column {
+                            Text(
+                                text = "ATUR BOM",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = CyberRed
+                            )
+                            Text(
+                                text = "$totalMines Bom • Ubah",
+                                fontSize = 9.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
 
                 // Custom Pro Grid Button
                 val isCustom = currentDifficulty == DifficultyLevel.CUSTOM

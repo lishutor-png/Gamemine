@@ -49,6 +49,7 @@ data class GameUiState(
     val showLeaderboardDialog: Boolean = false,
     val showStatsDialog: Boolean = false,
     val showCustomGridDialog: Boolean = false,
+    val showQuickBombDialog: Boolean = false,
     val showVictoryDialog: Boolean = false,
     val showDefeatDialog: Boolean = false,
     val lastCompletedTime: Long = 0L
@@ -407,6 +408,24 @@ class GameViewModel(
 
     fun setShowCustomGrid(show: Boolean) {
         _uiState.update { it.copy(showCustomGridDialog = show) }
+    }
+
+    fun setShowQuickBomb(show: Boolean) {
+        _uiState.update { it.copy(showQuickBombDialog = show) }
+    }
+
+    fun setBombCount(newMines: Int) {
+        val current = _uiState.value
+        val maxMines = (current.rows * current.cols - 9).coerceAtLeast(1)
+        val safeMines = newMines.coerceIn(1, maxMines)
+        val config = CustomConfig(current.rows, current.cols, safeMines)
+        _uiState.update {
+            it.copy(
+                customConfig = config,
+                showQuickBombDialog = false
+            )
+        }
+        startNewGame(DifficultyLevel.CUSTOM, config)
     }
 
     fun dismissVictoryDialog() {

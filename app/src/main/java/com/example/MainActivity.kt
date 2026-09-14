@@ -25,6 +25,7 @@ import com.example.ui.components.DefeatDialog
 import com.example.ui.components.GlobalStatsDialog
 import com.example.ui.components.LeaderboardDialog
 import com.example.ui.components.MinesweeperBoard
+import com.example.ui.components.QuickBombDialog
 import com.example.ui.components.TacticalHud
 import com.example.ui.components.VictoryDialog
 import com.example.ui.theme.MyApplicationTheme
@@ -72,15 +73,18 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onToggleThemeClick = { viewModel.toggleTheme() },
                                 onLeaderboardClick = { viewModel.setShowLeaderboard(true) },
-                                onStatsClick = { viewModel.setShowStats(true) }
+                                onStatsClick = { viewModel.setShowStats(true) },
+                                onBombsClick = { viewModel.setShowQuickBomb(true) }
                             )
 
                             // Control and Sizing Bar
                             ControlBar(
                                 controlMode = uiState.controlMode,
                                 currentDifficulty = uiState.difficulty,
+                                totalMines = uiState.totalMines,
                                 onModeChange = { viewModel.setControlMode(it) },
                                 onDifficultySelect = { viewModel.startNewGame(it) },
+                                onQuickBombClick = { viewModel.setShowQuickBomb(true) },
                                 onCustomConfigClick = { viewModel.setShowCustomGrid(true) },
                                 onZoomIn = { viewModel.zoomIn() },
                                 onZoomOut = { viewModel.zoomOut() },
@@ -124,6 +128,18 @@ class MainActivity : ComponentActivity() {
                                     viewModel.setShowCustomGrid(false)
                                 },
                                 onDismiss = { viewModel.setShowCustomGrid(false) }
+                            )
+                        }
+
+                        if (uiState.showQuickBombDialog) {
+                            QuickBombDialog(
+                                rows = uiState.rows,
+                                cols = uiState.cols,
+                                currentMines = uiState.totalMines,
+                                onApplyMines = { newMines ->
+                                    viewModel.setBombCount(newMines)
+                                },
+                                onDismiss = { viewModel.setShowQuickBomb(false) }
                             )
                         }
 
