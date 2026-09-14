@@ -20,6 +20,8 @@ Repositori ini sudah dilengkapi alur kerja otomatis (**GitHub Actions**) di `.gi
    - Gulir ke bagian bawah pada tabel **Artifacts**.
    - Klik **`Bomb-Disposal-Minesweeper-APK`** untuk langsung mengunduh file `.apk` siap pasang ke HP Anda!
 
+> **Catatan Teknis Build GitHub**: Workflow CI/CD telah dilengkapi langkah otomatis untuk memulihkan sertifikat penandatangan (`debug.keystore` via base64 / keytool) dan file konfigurasi, sehingga proses kompilasi di GitHub Actions dijamin berjalan mulus tanpa error `debug.keystore not found`.
+
 ---
 
 ## 💣 2. Cara Menentukan Jumlah Bom Sesuai Keinginan

@@ -119,7 +119,7 @@ object MinesweeperEngine {
         }
 
         while (queue.isNotEmpty()) {
-            val (currR, currC) = queue.poll()
+            val (currR, currC) = queue.removeFirst()
             for (dr in -1..1) {
                 for (dc in -1..1) {
                     if (dr == 0 && dc == 0) continue

@@ -29,6 +29,45 @@ jobs:
             chmod +x gradlew
           fi
 
+      - name: Prepare Signing Keystore and Environment
+        run: |
+          # 1. Ensure .env file exists for secrets plugin
+          if [ ! -f .env ]; then
+            if [ -f .env.example ]; then
+              cp .env.example .env
+            else
+              touch .env
+            fi
+          fi
+
+          # 2. Restore debug.keystore from debug.keystore.base64
+          if [ -f debug.keystore.base64 ]; then
+            echo "Restoring debug.keystore from debug.keystore.base64..."
+            base64 -d debug.keystore.base64 > debug.keystore
+          fi
+
+          # 3. Fallback: generate standard debug keystore if not present
+          if [ ! -f debug.keystore ]; then
+            echo "Generating debug.keystore with keytool..."
+            keytool -genkeypair -v \
+              -keystore debug.keystore \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
+          # 4. Provide fallback google-services.json if absent
+          if [ ! -f app/google-services.json ]; then
+            echo '{"project_info":{"project_number":"0","project_id":"dummy","storage_bucket":"dummy.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:dummy","android_client_info":{"package_name":"com.aistudio.bombdisposal.zkpq"}},"oauth_client":[],"api_key":[{"current_key":"dummy"}],"services":{"analytics_service":{"status":1}}}]}' > app/google-services.json
+          fi
+
+          echo "Keystore prepared successfully:"
+          ls -lh debug.keystore
+
       - name: Build Debug APK
         run: |
           if [ -f gradlew ]; then
